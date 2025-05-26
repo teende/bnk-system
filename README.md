@@ -8,7 +8,6 @@ Modern banking platform built with .NET 8 and microservices architecture.
 - ASP.NET Core
 - Entity Framework Core
 - PostgreSQL
-- Docker
 - RabbitMQ
 - Redis
 - gRPC
@@ -38,8 +37,6 @@ banking-platform/
 
 ## Requirements
 - .NET 8 SDK
-- Docker
-- Docker Compose
 - PostgreSQL 15+
 
 ## Installation and Setup
@@ -49,9 +46,14 @@ git clone https://github.com/your-username/banking-platform.git
 cd banking-platform
 ```
 
-2. Run with Docker Compose:
+2. Restore dependencies:
 ```bash
-docker-compose up -d
+dotnet restore
+```
+
+3. Build the solution:
+```bash
+dotnet build
 ```
 
 ## Configuration
