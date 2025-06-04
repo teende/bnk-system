@@ -36,7 +36,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
             .Matches("[0-9]").WithMessage("Password must contain at least one number")
             .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
-
+        
         RuleFor(x => x.ConfirmPassword)
             .NotEmpty().WithMessage("Confirmation password cannot be empty")
             .Equal(x => x.Password).WithMessage("Passwords do not match");
@@ -54,13 +54,8 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
     {
         var hashedPassword = _passwordHasher.HashPassword(request.Password);
 
-        var user = new Domain.Entities.User(request.Email, request.FirstName, request.LastName)
-        {
-            Email = request.Email,
-            PasswordHash = hashedPassword,
-            FirstName = request.FirstName,
-            LastName = request.LastName
-        };
+        var user = new Domain.Entities.User(request.Email, request.FirstName, request.LastName);
+        user.SetPasswordHash(hashedPassword);
 
         await _userRepository.AddAsync(user, cancellationToken);
 
