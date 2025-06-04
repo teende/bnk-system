@@ -22,11 +22,23 @@ namespace Banking.Services.User.Core.Application.UseCases.RegisterUser
 
         public async Task<UserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var passwordHash = await _passwordHasher.HashPasswordAsync(request.Password);
-            var user = new Domain.Entities.User(request.Email, request.FirstName, request.LastName);
-            user.SetPasswordHash(passwordHash);
+            var existingUser = await _userRepository.GetByEmailAsync(request.Email);
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException("User with this email already exists");
+            }
 
-            await _userRepository.AddAsync(user, cancellationToken);
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = request.Email,
+                PasswordHash = _passwordHasher.HashPassword(request.Password),
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _userRepository.AddAsync(user);
 
             return new UserResponse
             {
