@@ -5,6 +5,8 @@ using FluentValidation;
 using Banking.Services.User.Core.Application.UseCases.RegisterUser;
 using System;
 using System.Threading.Tasks;
+using Banking.Services.User.Api.Dtos;
+using Banking.Services.User.Core.Application.Models;
 
 namespace Banking.Services.User.Api.Controllers
 {
@@ -22,8 +24,17 @@ namespace Banking.Services.User.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<RegisterUserResponse>> Register([FromBody] RegisterUserCommand command)
+        public async Task<ActionResult<UserResponse>> Register([FromBody] CreateUserDto createUserDto)
         {
+            var command = new RegisterUserCommand
+            {
+                Email = createUserDto.Email,
+                Password = createUserDto.Password,
+                ConfirmPassword = createUserDto.ConfirmPassword,
+                FirstName = createUserDto.FirstName,
+                LastName = createUserDto.LastName
+            };
+
             try
             {
                 var result = await _mediator.Send(command);

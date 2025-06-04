@@ -1,15 +1,20 @@
 using FluentValidation;
+using Banking.Services.User.Core.Domain.Repositories;
 using Banking.Services.User.Core.Interfaces;
+using MediatR;
 
 namespace Banking.Services.User.Core.Application.UseCases.RegisterUser;
 
 public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
     
-    public RegisterUserCommandValidator(IUserRepository userRepository)
+
+    public RegisterUserCommandValidator(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
         
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email не может быть пустым")
@@ -19,7 +24,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .MaximumLength(50).WithMessage("Email не может быть длиннее 50 символов")
             .MustAsync(async (email, cancellationToken) => 
             {
-                var user = await _userRepository.GetUserByEmailAsync(email, cancellationToken);
+                var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
                 return user == null;
             }).WithMessage("Email уже зарегистрирован");
 
@@ -46,6 +51,23 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .Must(name => name.All(c => char.IsLetter(c) || c == ' ')).WithMessage("Фамилия может содержать только буквы и пробелы")
             .MinimumLength(3).WithMessage("Фамилия должна быть не менее 3 символов")
             .MaximumLength(50).WithMessage("Фамилия не может быть длиннее 50 символов");
+    }
+
+    public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    {
+        var hashedPassword = _passwordHasher.HashPassword(request.Password);
+
+        var user = new Domain.Entities.User(request.Email, request.FirstName, request.LastName)
+        {
+            Email = request.Email,
+            PasswordHash = hashedPassword,
+            FirstName = request.FirstName,
+            LastName = request.LastName
+        };
+
+        await _userRepository.AddAsync(user, cancellationToken);
+
+        return Unit.Value;
     }
 }
   
