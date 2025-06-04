@@ -1,7 +1,10 @@
-namespace Banking.Services.User.Core.Application.Interfaces;
+using System.Threading.Tasks;
 
-public interface IPasswordHasher
+namespace Banking.Services.User.Core.Application.Interfaces
 {
-    string HashPassword(string password);
-    bool VerifyPassword(string password, string hashedPassword);
+    public interface IPasswordHasher
+    {
+        Task<string> HashPasswordAsync(string password);
+        Task<bool> VerifyPasswordAsync(string password, string hash);
+    }
 } 

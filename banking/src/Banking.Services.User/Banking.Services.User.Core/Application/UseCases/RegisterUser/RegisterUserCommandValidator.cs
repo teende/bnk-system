@@ -17,40 +17,37 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
         _passwordHasher = passwordHasher;
         
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email не может быть пустым")
-            .EmailAddress().WithMessage("Неверный формат email")
-            .Must(email => email.Contains("@")).WithMessage("Email должен содержать символ @")
-            .Must(email => email.Split('@')[1].Contains(".")).WithMessage("Email должен содержать домен")
-            .MaximumLength(50).WithMessage("Email не может быть длиннее 50 символов")
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("Invalid email format")
+            .Must(email => email.Contains("@")).WithMessage("Email must contain '@'")
+            .Must(email => email.Split('@')[1].Contains(".")).WithMessage("Email must contain a domain")
+            .MaximumLength(50).WithMessage("Email must not exceed 50 characters")
             .MustAsync(async (email, cancellationToken) => 
             {
                 var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
                 return user == null;
-            }).WithMessage("Email уже зарегистрирован");
+            }).WithMessage("Email is already registered");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Пароль не может быть пустым")
-            .MinimumLength(8).WithMessage("Пароль должен быть не менее 8 символов")
-            .MaximumLength(50).WithMessage("Пароль не может быть длиннее 50 символов")
-            .Must(password => password.Any(char.IsUpper)).WithMessage("Пароль должен содержать хотя бы одну заглавную букву")
-            .Must(password => password.Any(char.IsLower)).WithMessage("Пароль должен содержать хотя бы одну строчную букву")
-            .Must(password => password.Any(char.IsDigit)).WithMessage("Пароль должен содержать хотя бы одну цифру");
+            .NotEmpty().WithMessage("Password is required")
+            .MinimumLength(8).WithMessage("Password must be at least 8 characters")
+            .MaximumLength(50).WithMessage("Password must not exceed 50 characters")
+            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
+            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
+            .Matches("[0-9]").WithMessage("Password must contain at least one number")
+            .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
 
         RuleFor(x => x.ConfirmPassword)
-            .NotEmpty().WithMessage("Подтверждение пароля не может быть пустым")
-            .Equal(x => x.Password).WithMessage("Пароли не совпадают");
+            .NotEmpty().WithMessage("Confirmation password cannot be empty")
+            .Equal(x => x.Password).WithMessage("Passwords do not match");
 
         RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("Имя не может быть пустым")
-            .Must(name => name.All(c => char.IsLetter(c) || c == ' ')).WithMessage("Имя может содержать только буквы и пробелы")
-            .MinimumLength(3).WithMessage("Имя должно быть не менее 3 символов")
-            .MaximumLength(50).WithMessage("Имя не может быть длиннее 50 символов");
+            .NotEmpty().WithMessage("First name is required")
+            .MaximumLength(50).WithMessage("First name must not exceed 50 characters");
 
         RuleFor(x => x.LastName)
-            .NotEmpty().WithMessage("Фамилия не может быть пустой")
-            .Must(name => name.All(c => char.IsLetter(c) || c == ' ')).WithMessage("Фамилия может содержать только буквы и пробелы")
-            .MinimumLength(3).WithMessage("Фамилия должна быть не менее 3 символов")
-            .MaximumLength(50).WithMessage("Фамилия не может быть длиннее 50 символов");
+            .NotEmpty().WithMessage("Last name is required")
+            .MaximumLength(50).WithMessage("Last name must not exceed 50 characters");
     }
 
     public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)

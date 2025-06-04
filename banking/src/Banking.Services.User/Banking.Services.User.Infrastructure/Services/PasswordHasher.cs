@@ -1,6 +1,5 @@
-using System.Security.Cryptography;
-using System.Text;
-using Banking.Services.User.Core.Application.Interfaces;
+using Banking.Services.User.Core.Interfaces;
+using BCrypt.Net;
 
 namespace Banking.Services.User.Infrastructure.Services;
 
@@ -8,14 +7,11 @@ public class PasswordHasher : IPasswordHasher
 {
     public string HashPassword(string password)
     {
-        using var sha256 = SHA256.Create();
-        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(hashedBytes);
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    public bool VerifyPassword(string password, string hashedPassword)
+    public bool VerifyPassword(string password, string passwordHash)
     {
-        var hashedInput = HashPassword(password);
-        return hashedInput == hashedPassword;
+        return BCrypt.Net.BCrypt.Verify(password, passwordHash);
     }
 } 
