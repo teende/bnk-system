@@ -21,7 +21,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .EmailAddress().WithMessage("Invalid email format")
             .Must(email => email.Contains("@")).WithMessage("Email must contain '@'")
             .Must(email => email.Split('@')[1].Contains(".")).WithMessage("Email must contain a domain")
-            .MaximumLength(50).WithMessage("Email must not exceed 50 characters")
+            .MaximumLength(100).WithMessage("Email must not exceed 100 characters")
             .MustAsync(async (email, cancellationToken) => 
             {
                 var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
@@ -31,7 +31,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required")
             .MinimumLength(8).WithMessage("Password must be at least 8 characters")
-            .MaximumLength(50).WithMessage("Password must not exceed 50 characters")
+            .MaximumLength(100).WithMessage("Password must not exceed 100 characters")
             .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
             .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
             .Matches("[0-9]").WithMessage("Password must contain at least one number")
