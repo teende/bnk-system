@@ -88,36 +88,6 @@ dotnet run
 Using Docker:
 ```bash
 docker-compose up -d
-```
-
-## 📁 Project Structure
-
-```
-banking-platform/
-├── banking/
-│   └── src/
-│       ├── Banking.Services.Card/
-│       │   ├── Banking.Services.Card.Api/        # API endpoints
-│       │   └── Banking.Services.Card.Core/       # Business logic
-│       ├── Banking.Services.User/
-│       │   ├── Banking.Services.User.Api/        # API endpoints
-│       │   ├── Banking.Services.User.Core/       # Business logic
-│       │   ├── Banking.Services.User.Infrastructure/  # Data access
-│       │   └── Banking.Services.User.Tests/      # Unit tests
-│       ├── Banking.Services.Admin/
-│       │   ├── Banking.Services.Admin.Api/       # API endpoints
-│       │   └── Banking.Services.Admin.Core/      # Business logic
-│       ├── Banking.Services.Main/
-│       │   ├── Banking.Services.Main.Api/        # API endpoints
-│       │   └── Banking.Services.Main.Core/       # Business logic
-│       └── Banking.Common/
-│           ├── Banking.Common.Models/            # Shared models
-│           ├── Banking.Common.Interfaces/        # Shared interfaces
-│           └── Banking.Common.Extensions/        # Extension methods
-├── tests/                                       # Integration tests
-├── docs/                                        # Documentation
-└── docker/                                      # Docker configuration
-```
 
 ## 🔐 Security
 
@@ -151,12 +121,6 @@ We welcome contributions to the project! Please follow these steps:
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-- Project Link: [https://github.com/your-username/banking-platform](https://github.com/your-username/banking-platform)
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
 
 ## 🙏 Acknowledgments
 
