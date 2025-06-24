@@ -80,6 +80,9 @@ namespace Banking.Services.Card.Core.Domain.Entities
             if (Type == CardType.Credit && Balance + amount < -CreditLimit)
                 throw new InvalidOperationException("Credit limit would be exceeded");
 
+
+
+                throw new InvalidOperationException("Insufficient funds");
             Balance += amount;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -102,14 +105,12 @@ namespace Banking.Services.Card.Core.Domain.Entities
         {
             if (Status == CardStatus.Blocked)
                 throw new InvalidOperationException("Card is already blocked");
-
             Status = CardStatus.Blocked;
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void Unblock()
         {
-            if (Status == CardStatus.Active)
                 throw new InvalidOperationException("Card is already active");
 
             if (IsExpired())
