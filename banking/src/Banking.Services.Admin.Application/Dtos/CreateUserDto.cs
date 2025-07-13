@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Banking.Services.Admin.Application.Dtos
 {
     public class CreateUserDto

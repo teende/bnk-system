@@ -1,3 +1,5 @@
+using System;
+
 namespace Banking.Services.Admin.Application.Dtos
 {
     public class UserDto
