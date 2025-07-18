@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageReference Include="FluentValidation" Version="11.5.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Banking.Services.User/Banking.Services.User.Core/Banking.Services.User.Core.csproj" />
+  </ItemGroup>
+</Project> 
